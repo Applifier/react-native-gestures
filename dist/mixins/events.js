@@ -14,18 +14,19 @@ var _rx2 = _interopRequireDefault(_rx);
 function events() {
   var evs = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
 
-  var streams = evs.reduce(function (res, eventName) {
-    res[eventName] = new _rx2['default'].Subject();
-    return res;
-  }, {});
-
   return {
     componentWillMount: function componentWillMount() {
-      Object.assign(this, streams);
+      this.streams = evs.reduce(function (res, eventName) {
+        res[eventName] = new _rx2['default'].Subject();
+        return res;
+      }, {});
+      Object.assign(this, this.streams);
     },
     componentWillUnmount: function componentWillUnmount() {
+      var _this = this;
+
       evs.forEach(function (ev) {
-        return streams[ev].onCompleted();
+        return _this.streams[ev].onCompleted();
       });
     }
   };
